@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<title>Login</title>
+		<h:outputStylesheet name="css/style.css" />
+		<h:outputStylesheet name="css/boot.css" />
+	</h:head>
+
+<h:body>
+	<div class="wrapper">
+		<h:form class="form-signin">
+			<p:growl id="growl" showDetail="true"/>
+			<h2 class="form-signin-heading">Iniciar Sesión</h2>							
+			<p:outputLabel for="usuario" value="Usuario:" />
+			<h:inputText class="form-control" id="usuario" value="#{loginBean.user}"/><br></br>
+			
+			<p:outputLabel for="password" value="Contraseña:" />
+			<h:inputSecret id="password" value="#{loginBean.pwd}" class="form-control"/><br></br>
+				
+			<p:commandButton styleClass="btn btn-lg btn-primary btn-block" value="Ingresar" action="#{loginBean.autentificarUsuario}" update="@form" ajax="true" onclick="start()"/>
+			
+			
+			<p:progressBar widgetVar="pb" />
+			
+
+
+		</h:form>
+			
+	</div>
+	
+	<script type="text/javascript">
+		function start()
+		{
+			this.progressInterval = setInterval(function()
+			{
+				PF('pb').setValue(PF('pb').getValue() + 10);
+			}, 2000);
+		}
+		function cancel()
+		{
+			clearInterval(this.progressInterval);
+			PF('pb').setValue(0);
+		}
+		</script>
+</h:body>
+</html>

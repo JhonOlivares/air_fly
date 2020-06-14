@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    style="overflow-y: scroll;"
+    >
+
+    <h:head>
+        <title>Vuelos</title>
+        <h:outputStylesheet name="css/boot.css" />
+        <h:outputStylesheet name="css/style2.css"/>
+    </h:head>
+
+    <h:body>
+        <!--.....................   MENUBAR.................................-->
+        <h:panelGroup layout="block">
+        <p:growl id="messages"/>
+        
+        <p:menubar style="margin-left:5%;margin-right:5%;margin-top:15px">
+            <p:menuitem value="Home" url="home.xhtml" icon="ui-icon-home"/>    
+            <p:menuitem value="Aeropuerto" url="Aeropuerto.xhtml" icon="ui-icon-airplane" />
+            <p:menuitem value="Avion" url="avion.xhtml" icon="ui-icon-airplane" />
+            <p:menuitem value="Vuelos" url="VueloProgramado.xhtml" icon="ui-icon-airplane" />  
+            <f:facet name="options">
+                <!--<p:inputText style="margin-right:10px" placeholder="Search"/>-->
+                <p:commandButton value="Logout" action="#{loginBean.logout}" icon="ui-icon-extlink" />
+            </f:facet>
+        </p:menubar>
+    </h:panelGroup>
+        <!--..................... FIN  MENUBAR.................................-->
+        <h:form>
+                        <p:remoteCommand name="rc" actionListener="#{vueloProgramadoBean.todosLosVuelos()}" autoRun="true"   update=":pestanaPrincipal:formVuelos" ajax="true" />
+                    </h:form>
+        <p:tabView id="pestanaPrincipal" effect="fade" effectDuration="fast" style="margin-left:13%;margin-right:13%;margin-top:30px">
+            <p:tab title="Vuelos">
+                <h:form id="formVuelos" prependId="false" onkeypress="if (event.keyCode == 13) { return false; }">
+                        <p:growl id="mensajeVueloFecha" showDetail="true"/>
+                        <p:outputPanel id="locom">
+                    <p:dataGrid var="vuelo" value="#{vueloProgramadoBean.vuelos}" columns="1" layout="grid">
+                
+                        <f:facet name="header">
+                            Cars for Sale
+                        </f:facet>
+                        <p:panel>
+                            <p:panelGrid styleClass="ui-panelgrid-blank ui-panelgrid-cell ui-panelgrid" style="width: 100%">
+                                <p:row>
+                                    <p:column colspan="2">
+                                        <h:panelGrid columns="1" cellpadding="5" style="width: 100%">
+                                            <h:outputText value="#{vuelo.vueloProgramado.numeroVuelo}" style="font-weight: bold"/>
+                                        </h:panelGrid>
+                                    </p:column>
+                                    <p:column style="text-align: right;">
+                                        <h:panelGrid columns="1" cellpadding="5" style="width: 100%">
+                                            <h:outputText value="#{vuelo.avion.modeloavion.modelo}" style="font-weight: bold"/>
+                                            <h:outputText value="#{vuelo.avion.avionMatricula}" />
+                                        </h:panelGrid>
+                                    </p:column>
+                                    </p:row>
+                                <p:row>
+                                    <p:column style="text-align: center;width: 40%">
+                                        <h:panelGrid columns="1" cellpadding="5" style="width: 100%">
+                                            <h:outputText value="#{vuelo.vueloProgramado.aeropuerto2.iataAeropuertoID}" style="font-weight: bold"/>
+                                            <h:outputText value="#{vuelo.vueloProgramado.aeropuerto2.ciudad.nombreciudad}, #{vuelo.vueloProgramado.aeropuerto2.ciudad.pai.nombrepais}"/>
+                                        </h:panelGrid>
+                                    </p:column>
+                                    <p:column style="text-align: center;width: 20%">
+                                            <h:panelGrid columns="1" cellpadding="5" style="width: 100%">
+                                                    <h:outputText value="#{vuelo.fechavuelo}" style="font-weight: bold">
+                                                            <f:convertDateTime pattern="d MMM yyyy"/>
+                                                    </h:outputText>
+                                                    <h:outputText value="#{vuelo.vueloProgramado.horaProgramada}">
+                                                            <f:convertDateTime pattern="HH:mm" timeZone="GMT-5"/>
+                                                    </h:outputText>
+                                            </h:panelGrid>
+                                    </p:column>
+                                    <p:column style="text-align: center;width: 40%">
+                                        <h:panelGrid columns="1" cellpadding="5" style="width: 100%">
+                                            <h:outputText value="#{vuelo.vueloProgramado.aeropuerto1.iataAeropuertoID}" style="font-weight: bold"/>
+                                            <h:outputText value="#{vuelo.vueloProgramado.aeropuerto1.ciudad.nombreciudad}, #{vuelo.vueloProgramado.aeropuerto1.ciudad.pai.nombrepais}"/>
+                                        </h:panelGrid>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:dataGrid></p:outputPanel>
+                </h:form>                
+            </p:tab>
+            <p:tab title="Horarios">
+                <h:form id="formHorarios" prependId="false" onkeypress="if (event.keyCode == 13) { return false; }">
+                    <p:growl id="mensajeHorario" showDetail="true"/>
+                    <p:dataGrid var="horario" value="#{vueloProgramadoBean.oVuelosProgramados}" columns="1" layout="grid">
+                        <p:panel styleClass="ui-panel ui-panel-content">
+                            <p:panelGrid styleClass="ui-panelgrid-blank ui-panelgrid-cell ui-panelgrid" style="width: 100%">
+                                <p:row>
+                                    <p:column rowspan="2" style="text-align: left; width: 22%">
+                                        <h:panelGrid columns="2" cellpadding="0" style="width: 100%">
+                                            <h:graphicImage value="resources/images/vuelo.png" width="38px" style="text-align: right!important"/>
+                                            <h:outputText value="#{horario.numeroVuelo}" style="font-weight: bold;font-size: 25pt"/>
+                                        </h:panelGrid>                                        
+                                    </p:column>
+                                    <p:column style="text-align:center; width:6%">
+                                        <h:graphicImage value="resources/images/departure.png" width="32px"/>
+                                    </p:column>
+                                    <p:column style="text-align:left; width:44%; padding-bottom:6pt !important">
+                                        <h:panelGrid columns="1" cellpadding="2" style="width:100%;">
+                                            <h:outputText value="#{horario.aeropuerto2.nombreaeropuerto}" style="font-weight: bold"/>
+                                            <h:outputText value="#{horario.aeropuerto2.ciudad.nombreciudad}, #{horario.aeropuerto2.ciudad.pai.nombrepais}"/>
+                                        </h:panelGrid>
+                                    </p:column>
+                                    <p:column style="text-align: center; width: 20%">
+                                        <h:graphicImage value="resources/images/time.png" width="24px" style="padding-bottom: 10px; margin-right: 10px"/>
+                                        <h:outputText value="#{horario.horaProgramada}" style="font-weight: bold; font-size: 20pt">
+                                            <f:convertDateTime pattern="HH:mm" timeZone="GMT-5"/>
+                                        </h:outputText>
+                                    </p:column>
+                                    <p:column rowspan="2" style="text-align: right; vertical-align: top; width: 5%;">
+                                            <h:panelGrid columns="1" style="width:100%">
+                                        <p:commandLink update=":pestanaPrincipal:formHorarios:addDate" oncomplete="PF('fechaDialog').show()" title="Agregar fecha al vuelo">
+                                            <h:graphicImage value="resources/images/newDate.png" style="width:20px; margin-bottom: 10px;margin-left: 5px"/>
+                                            <f:setPropertyActionListener value="#{horario}" target="#{vueloProgramadoBean.selectedVueloProgramado}"/>
+                                            <f:actionListener binding="#{vueloProgramadoBean.availableAircrafts()}"/>
+                                        </p:commandLink>
+                                        <p:commandLink update=":pestanaPrincipal:formHorarios:horarioEdit" oncomplete="PF('horarioDialog').show()" title="Cambiar horario">
+                                            <h:graphicImage value="resources/images/editSchedule.png" style="width:20px; margin-bottom: 10px; margin-left: 5px"/>
+                                            <f:setPropertyActionListener value="#{horario}" target="#{vueloProgramadoBean.selectedVueloProgramado}"/>                                            
+                                        </p:commandLink>
+                                        <p:commandLink onclick="if (! confirm('Estas suguro de borrar el registro?')) return false" update=":pestanaPrincipal:formHorarios" ajax="true" title="Eliminar vuelo programado">
+                                            <h:graphicImage value="resources/images/deleteSchedule.png" style="width:20px; margin-left: 5px"/>
+                                            <f:setPropertyActionListener value="#{horario}" target="#{vueloProgramadoBean.selectedVueloProgramado}"/>
+                                            <f:actionListener binding="#{vueloProgramadoBean.eliminarHorario()}"/>
+                                        </p:commandLink>
+                                    </h:panelGrid>
+                                    </p:column>
+                                </p:row>
+                                <p:row>
+                                    <p:column style="text-align:center; width:6%;">
+                                        <h:graphicImage value="resources/images/arrival.png" width="32px"/>
+                                    </p:column>
+                                    <p:column style="text-align:left; width:44%; padding-top:6pt !important">
+                                        <h:panelGrid columns="1" cellpadding="2" style="width:100%;">
+                                            <h:outputText value="#{horario.aeropuerto1.nombreaeropuerto}" style="font-weight: bold"/>                                 
+                                            <h:outputText value="#{horario.aeropuerto1.ciudad.nombreciudad}, #{horario.aeropuerto1.ciudad.pai.nombrepais}" />
+                                        </h:panelGrid>
+                                    </p:column>
+                                    <p:column style="text-align: right; vertical-align:bottom; width: 20%">
+                                        <h:graphicImage value="resources/images/timer.png" width="20px" style="padding-bottom: 10px; margin-right: 9px"/>
+                                        <h:outputText value="Tiempo – " style="font-size: 14pt"/>
+                                        <h:outputText value="#{horario.tiempodevuelo}" style="font-weight: bold; font-size: 14pt">
+                                            <f:convertDateTime pattern="H:m" timeZone="GMT-5"/>
+                                        </h:outputText>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:panel>
+                    </p:dataGrid>
+                    <p:dialog header="Cambiar horario" widgetVar="horarioDialog" modal="true" resizable="false">
+                        <p:outputPanel id="horarioEdit" style="text-align:center;">
+                            <h:outputText value="Vuelo – #{vueloProgramadoBean.selectedVueloProgramado.numeroVuelo}" style="font-size: 19pt; font-weight: bold"/>
+                            <h:panelGrid columns="3" cellpadding="5" rendered="#{not empty vueloProgramadoBean.selectedVueloProgramado}" style="margin: 12pt">
+                                <h:graphicImage value="resources/images/time.png" width="24px" style="padding-bottom: 10px; margin-right: 10px"/>
+                                <p:outputLabel for="horaE" value="Hora fijado para el vuelo:"/>
+                                <p:calendar id="horaE" value="#{vueloProgramadoBean.selectedVueloProgramado.horaProgramada}" pattern="HH:mm" timeOnly="true"/>
+                                <h:graphicImage value="resources/images/timer.png" width="24px" style="padding-bottom: 10px; margin-right: 10px"/>
+                                <p:outputLabel for="tiempoEdit" value="Tiempo de vuelo estimado:"/>
+                                <p:calendar id="tiempoEdit" value="#{vueloProgramadoBean.selectedVueloProgramado.tiempodevuelo}" pattern="HH:mm" timeOnly="true"/>
+                            </h:panelGrid>
+                            <p:commandButton value="Confirmar Cambios" actionListener="#{vueloProgramadoBean.editarHorario}" update=":pestanaPrincipal:formHorarios" ajax="true"
+                                oncomplete="PF('horarioDialog').hide();" icon="ui-icon-pencil"  styleClass="ui-priority-primary"/>
+                        </p:outputPanel>
+                    </p:dialog>
+                    <p:dialog header="Nueva Fecha" widgetVar="fechaDialog" modal="true" resizable="false">
+                        <p:outputPanel id="addDate" style="text-align:center;">
+                            <h:outputText value="Vuelo – #{vueloProgramadoBean.selectedVueloProgramado.numeroVuelo}" style="font-size: 19pt; font-weight: bold"/>                            
+                            <h:panelGrid columns="2" cellpadding="5" rendered="#{not empty vueloProgramadoBean.selectedVueloProgramado}" style="margin: 12pt; text-align: left">
+                                
+                                <p:outputLabel for="avionesD" value="Elige un avion #{vueloProgramadoBean.selectedVueloProgramado.modeloavion.manufacturer.fabricante} #{vueloProgramadoBean.selectedVueloProgramado.modeloavion.modelo}:"/>
+                                <p:selectOneMenu id="avionesD" value="#{vueloProgramadoBean.avion.avionMatricula}" lazy="true" style="width: 300px">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{vueloProgramadoBean.aviones}" var="avion" itemLabel="#{avion.avionMatricula}" itemValue="#{avion.avionMatricula}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="fechaadd" value="Fecha:"/>
+                                <p:calendar id="fechaadd" value="#{vueloProgramadoBean.vuelo.fechavuelo}" mindate="#{vueloProgramadoBean.currentDate}"/>
+                                
+                                
+                            </h:panelGrid>
+                            <p:commandButton value="Agregar" actionListener="#{vueloProgramadoBean.registrarVuelo}"
+                                update=":pestanaPrincipal:formVuelos" ajax="true"
+                                oncomplete="PF('fechaDialog').hide();" styleClass="ui-priority-primary"/>
+                        </p:outputPanel>
+                    </p:dialog>
+                </h:form>
+            </p:tab>
+            <p:tab title="+ Nuevo" titleStyle="float:right">
+                <p:panel>
+                    <h:form id="formNuevoHorario" prependId="false" onkeypress="if (event.keyCode == 13) { return false; }">
+                        <p:growl id="mensajeNuevo" showDetail="true"/>
+                        <p:outputPanel id="newFlightID">
+                            <h:panelGrid columns="2" cellpadding="5">
+                                <p:outputLabel for="vuelo" value="Vuelo:"/>
+                                <p:inputText id="vuelo" value="#{vueloProgramadoBean.oVueloProgramado.numeroVuelo}"/>
+                                
+                                <p:outputLabel for="origen" value="Origen:"/>
+                                <p:selectOneMenu id="origen" value="#{vueloProgramadoBean.aOrigen.iataAeropuertoID}" lazy="true" filter="true" filterMatchMode="contains" style="width: 700px">                                    
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{vueloProgramadoBean.oAeropuertos}" var="aOrigen" itemLabel="#{aOrigen.iataAeropuertoID} – #{aOrigen.nombreaeropuerto}, #{aOrigen.ciudad.nombreciudad}, #{aOrigen.ciudad.pai.nombrepais}" itemValue="#{aOrigen.iataAeropuertoID}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="destino" value="Destino:"/>
+                                <p:selectOneMenu id="destino" value="#{vueloProgramadoBean.aDestino.iataAeropuertoID}" lazy="true" filter="true" filterMatchMode="contains" style="width: 700px">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{vueloProgramadoBean.oAeropuertos}" var="vDestino" itemLabel="#{vDestino.iataAeropuertoID} – #{vDestino.nombreaeropuerto}, #{vDestino.ciudad.nombreciudad}, #{vDestino.ciudad.pai.nombrepais}" itemValue="#{vDestino.iataAeropuertoID}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="modelors" value="Modelo:"/>
+                                <p:selectOneMenu id="modelors" value="#{vueloProgramadoBean.oModeloAvion.modeloAvionID}" lazy="true" style="width: 300px">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{vueloProgramadoBean.oModeloDeAviones}" var="modelosa" itemLabel="#{modelosa.manufacturer.fabricante}, #{modelosa.modelo}" itemValue="#{modelosa.modeloAvionID}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="horaProgramada" value="Hora:" />
+                                <p:calendar id="horaProgramada" value="#{vueloProgramadoBean.oVueloProgramado.horaProgramada}" pattern="HH:mm" timeOnly="true"/>
+
+                                <p:outputLabel for="tiempoVuelo" value="Tiempo:" />
+                                <p:calendar id="tiempoVuelo" value="#{vueloProgramadoBean.oVueloProgramado.tiempodevuelo}" pattern="HH:mm" timeOnly="true"/>
+                            </h:panelGrid>
+                            <p:commandButton value="Agregar" actionListener="#{vueloProgramadoBean.registrarHorario}" update=":pestanaPrincipal:formHorarios pestanaPrincipal:formNuevoHorario" ajax="true"
+                                icon="ui-icon-check"  styleClass="ui-priority-primary" style="width: 160px;margin-left: 40%;margin-top: 20px"/>
+                        </p:outputPanel>
+                    </h:form>
+                </p:panel>
+            </p:tab>
+        </p:tabView>
+    </h:body>
+</html>

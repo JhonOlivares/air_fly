@@ -1,0 +1,136 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    >
+
+    <h:head>
+        <title>Aeropuerto</title>
+        <h:outputStylesheet name="css/boot.css"/>
+        <h:outputStylesheet name="css/style2.css"/>
+    </h:head>
+
+    <body>
+        <!--.....................   MENUBAR.................................-->
+        <h:panelGroup layout="block">
+            <p:growl id="messages2"/>
+            
+            <p:menubar style="margin-left:5%;margin-right:5%;margin-top:15px">
+                <p:menuitem value="Home" url="home.xhtml" icon="ui-icon-home"/>    
+                <p:menuitem value="Aeropuerto" url="Aeropuerto.xhtml" icon="ui-icon-airplane" />
+                <p:menuitem value="Avion" url="avion.xhtml" icon="ui-icon-airplane" />
+                <p:menuitem value="Vuelos" url="VueloProgramado.xhtml" icon="ui-icon-airplane" />  
+                <f:facet name="options">
+                    <!--<p:inputText style="margin-right:10px" placeholder="Search"/>-->
+                    <p:commandButton value="Logout" action="#{loginBean.logout}" icon="ui-icon-extlink" />
+                </f:facet>
+            </p:menubar>
+        </h:panelGroup>
+        <!--..................... FIN  MENUBAR.................................-->
+
+        
+
+        <h:form id="forumularioPrincipal"
+                style="margin-left:13%;margin-right:13%;margin-top:30px"
+                onkeypress="if (event.keyCode == 13) { return false; }">
+            <p:growl id="mensaje" showDetail="true"/>
+		<h:panelGroup layout="block">
+                <h:panelGroup layout="block">
+                    <h1>Aeropuertos</h1>
+                </h:panelGroup>
+                
+        <p:dataTable id="TablaAeropuertos" widgetVar="TablaAeropuertos" reflow="true"
+        tableStyleClass="table table-striped" var="lista" value="#{aeropuertoBean.oAeropuertos}"
+        filteredValue="#{aeropuertoBean.filteredAirports}" emptyMessage="No hay registros"
+        stickyHeader="true">
+                
+            <f:facet name="header">
+                <p:outputPanel style="text-align: left; width: 100%; margin-bottom: 12px;margin-top: 12px"  >
+                    <p:commandButton value="Nuevo" actionListener="#{aeropuertoBean.resetValues}" update="agregarForm" ajax="true" oncomplete="PF('dlgNuevoAeropuerto').show();" icon="ui-icon-plus"></p:commandButton>
+                    <p:commandButton value="actualizar" actionListener="#{aeropuertoBean.listaAeropuertos}" update="forumularioPrincipal" ajax="true" oncomplete="PF('TablaAeropuertos').filter()" icon="ui-icon-refresh" style="margin-left: 10px"/>
+                    <p:inputText id="globalFilter" update="forumularioPrincipal" onkeyup="PF('TablaAeropuertos').filter()" style="width:250px;margin-left: 10px" placeholder="Filtrar"/>
+                    <h:commandButton value="Exportar PDF" actionListener="#{aeropuertoBean.exportarReportePDF}" style="margin-left: 10px"/>
+                </p:outputPanel>
+            </f:facet>
+                    
+			<p:column headerText="IATA Code" filterBy="#{lista.iataAeropuertoID}" filterStyle="display:none" style="width: 13%;text-align: center" >
+                <h:outputText value="#{lista.iataAeropuertoID}"/>
+            </p:column>
+            <p:column headerText="Nombre Aeropuerto" filterBy="#{lista.nombreaeropuerto}" filterStyle="display:none">
+                <!--<h:outputText value="#{lista.nombreaeropuerto}" style="float:none"/>-->
+                <p:link href="#" value="#{lista.nombreaeropuerto}" style=" color:#327db6; font-weight: bold" />
+            </p:column>
+            <p:column headerText="Ciudad" filterBy="#{lista.ciudad.nombreciudad}" filterStyle="display:none" style="width: 26%">
+				<h:outputText value="#{lista.ciudad.nombreciudad}"/>
+            </p:column>
+            <p:column rendered="#{aeropuertoBean.hayAeropuertos}" style="width: 100px">
+                <p:commandButton update="actualizarForm" ajax="true" actionListener="#{aeropuertoBean.mostrarRegistro(lista)}" oncomplete="PF('dlgActualizarAeropuerto').show();" title="Editar registro" icon="ui-icon-pencil"/>
+                <p:commandButton update="@form" ajax="true" actionListener="#{aeropuertoBean.eliminarAeropuerto(lista)}" oncomplete="PF('TablaAeropuertos').filter();" title="Eliminar registro" icon="ui-icon-trash" style="margin-left: 5px">
+                    <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert"/>
+                    <f:actionListener binding="#{vueloProgramadoBean.listaAeropuertos()}"/>
+                </p:commandButton>
+            </p:column>
+            
+            <!--<f:facet name="footer">
+            En total hay #{fn:length(aeropuertoBean.filteredAirports)} aeropuertos.
+            </f:facet>-->
+        
+        </p:dataTable>
+        </h:panelGroup>
+        <p:confirmDialog global="true">
+            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+        </p:confirmDialog>
+        </h:form>
+        
+        <h:form id="agregarForm">
+            <p:growl id="mensajeAgregar" showDetail="true"/>
+            <p:dialog header="Nuevo Aeropuerto" widgetVar="dlgNuevoAeropuerto" resizable="false" modal="true">
+                <p:ajax event="close" update="agregarForm" listener="#{aeropuertoBean.handleClose}"/>            
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+                    <p:outputLabel for="IATACode" value="Código IATA:" />
+                    <p:inputText id="IATACode" value="#{aeropuertoBean.oAeropuerto.iataAeropuertoID}" label="Codigo IATA" maxlength="3" required="true" />
+                            
+                    <p:outputLabel for="nombre" value="Nombre aeropuerto:" />
+                    <p:inputText id="nombre" value="#{aeropuertoBean.oAeropuerto.nombreaeropuerto}" label="Nombre aeropuerto:"  required="true" style="width: 400px"/>
+    
+                    <p:outputLabel for="Ciudades" value="Ciudad:" />
+                    <p:selectOneMenu id="Ciudades" value="#{aeropuertoBean.oCiudad.ciudadID}" lazy="true" required="true">
+                        <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                        <f:selectItems value="#{aeropuertoBean.oCiudades}" var="Ciudades" itemLabel="#{Ciudades.nombreciudad}" itemValue="#{Ciudades.ciudadID}" required="true" />
+                    </p:selectOneMenu>
+
+                    <p:commandButton value="Agregar" actionListener="#{aeropuertoBean.registrarAeropuerto}"
+                        update="agregarForm" ajax="true"
+                        oncomplete="PF('TablaAeropuertos').addRow();PF('dlgNuevoAeropuerto').hide();PF('TablaAeropuertos').filter();" styleClass="ui-priority-primary">
+                        <f:actionListener binding="#{vueloProgramadoBean.listaAeropuertos()}"/>
+                    </p:commandButton>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+
+        <h:form id="actualizarForm">
+            <p:growl id="mensajeActualizar" showDetail="true"/>
+            <p:dialog header="Editar Aeropuerto: #{aeropuertoBean.oAeropuerto.iataAeropuertoID}" widgetVar="dlgActualizarAeropuerto" resizable="false" modal="true">
+                <h:panelGrid id="grid" columns="2" cellpadding="5">
+                                
+                        <p:outputLabel for="nombreEdit" value="Nombre aeropuerto:" />
+                        <p:inputText id="nombreEdit" value="#{aeropuertoBean.oAeropuerto.nombreaeropuerto}" label="Nombre aeropuerto:"  required="true" style="width: 400px"/>
+    
+                        <p:outputLabel for="CiudadesEdit" value="Ciudad:" />
+                        <p:selectOneMenu id="CiudadesEdit" value="#{aeropuertoBean.oCiudad.ciudadID}" lazy="true" required="true">
+                            <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                            <f:selectItems value="#{aeropuertoBean.oCiudades}" var="CiudadesEdit" itemLabel="#{CiudadesEdit.nombreciudad}" itemValue="#{CiudadesEdit.ciudadID}" required="true" />
+                        </p:selectOneMenu>
+
+                        <p:commandButton value="Confirmar cambios" action="#{aeropuertoBean.actualizarAeropuerto}" oncomplete="PF('dlgActualizarAeropuerto').hide();PF('TablaAeropuertos').filter();" update="forumularioPrincipal actualizarForm" ajax="true" icon="ui-icon-check"/>
+                </h:panelGrid>
+            </p:dialog>
+        </h:form>
+    </body>
+</html>

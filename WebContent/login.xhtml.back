@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    >
+<h:head>
+
+<title>Inicio Sistema</title>
+<h:outputStylesheet name="css/style.css" />
+<h:outputStylesheet name="css/boot.css" />
+<!-- <meta http-equiv="refresh" content="0; url=Aeropuerto.xhtml" /> -->
+</h:head>
+<h:body>	
+	<div class="wrapper">
+        <h:form class="form-signin">       
+            <p:growl id="growl" showDetail="true"/>
+            <h2 class="form-signin-heading">Iniciar Sesion</h2>
+            <h:outputLabel value="Usuario"/>
+            <h:inputText type="text" class="form-control" value="#{loginBean.user}" name="username"/><br></br>
+            <h:outputLabel value="Contraseña"/>
+            <h:inputText type="password" value="#{loginBean.pwd}" class="form-control" name="password"/><br></br>
+            <h:commandButton styleClass="btn btn-lg btn-primary btn-block" value="Ingresar" actionListener="#{loginBean.noFunciona}"  /> 
+        </h:form>
+    </div>
+</h:body>
+</html>

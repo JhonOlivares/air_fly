@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    >
+
+    <h:head>
+        <title>Aeropuerto</title>
+        <h:outputStylesheet name="css/boot.css" />
+        <meta http-equiv="refresh" content="0; url=Aeropuerto.xhtml" />
+    </h:head>
+
+    <body>
+        <!--.....................   MENUBAR.................................-->
+        <h:panelGroup layout="block">
+        <p:growl id="messages"/>
+        
+        <p:menubar style="margin-left:5%;margin-right:5%;margin-top:15px">
+            <p:menuitem value="Home" url="#" icon="ui-icon-home"/>    
+            <p:menuitem value="Aeropuerto" url="Aeropuerto.xhtml" icon="ui-icon-airplane" />
+            <p:menuitem value="Avion" url="#" icon="ui-icon-airplane" />
+            <p:menuitem value="Vuelos" url="#" icon="ui-icon-airplane" />  
+            <f:facet name="options">
+                <!--<p:inputText style="margin-right:10px" placeholder="Search"/>-->
+                <p:commandButton value="Logout" action="#{loginBean.logout}" icon="ui-icon-extlink" />
+            </f:facet>
+        </p:menubar>
+    </h:panelGroup>
+        <!--..................... FIN  MENUBAR.................................-->
+
+        
+
+        <h:form id="form1" style="margin-left:13%;margin-right:13%;margin-top:30px">
+		<h:panelGroup layout="block">
+                <h:panelGroup layout="block">
+                    <h1>Aeropuertos</h1>
+                    <p:toolbar>
+                        <f:facet name="left">
+                                
+                                <p:commandButton value="Nuevo" icon="ui-icon-plus" onclick="PF('dlgNuevoAeropuerto').show();"></p:commandButton>    
+                                <p:commandButton value="actualizar" action="#{aeropuertoBean.listaAeropuertos}" update="@form" ajax="true" style="margin-left: 5px"></p:commandButton>
+                            </f:facet>
+                </p:toolbar>
+                </h:panelGroup>
+                
+		<p:dataTable tableStyleClass="table table-striped" var="lista" value="#{aeropuertoBean.oAeropuertos}">
+                <!--
+                <f:facet name="header">
+                        Lista de Aeropuertos
+                    </f:facet>
+                -->
+                    
+			<p:column headerText="IATA Code" sortBy="#{lista.iataAeropuertoID}">
+				<h:outputText value="#{lista.iataAeropuertoID}"/>
+            </p:column>
+            <p:column headerText="Nombre Aeropuerto" sortBy="#{lista.nombreaeropuerto}">
+				<h:outputText value="#{lista.nombreaeropuerto}" style="float:none"/>
+            </p:column>
+            <p:column headerText="Ciudad" sortBy="#{lista.ciudad.nombreciudad}" >
+				<h:outputText value="#{lista.ciudad.nombreciudad}" />
+            </p:column>
+            <f:facet name="footer">
+            En total hay #{fn:length(aeropuertoBean.oAeropuertos)} Aeropuertos.
+            </f:facet>
+        
+        </p:dataTable>
+		
+		</h:panelGroup>
+        </h:form>
+
+        <h:form>                           
+            <p:dialog header="Nuevo Aeropuerto" widgetVar="dlgNuevoAeropuerto" resizable="false">
+                <h:panelGrid id="grid" columns="3" cellpadding="5">
+                
+                    <p:outputLabel for="IATACode" value="Codigo IATA:" />
+                    <p:inputText id="IATACode" value="#{aeropuertoBean.oAeropuerto.iataAeropuertoID}" label="Codigo IATA"/>
+                    <p:message for="IATACode" />
+        
+                    <p:outputLabel for="nombre" value="Nombre aeropuerto:" />
+                    <p:inputText id="nombre" value="#{aeropuertoBean.oAeropuerto.nombreaeropuerto}" label="nombre"/>
+                    <p:message for="nombre" />
+
+                    <p:outputLabel for="Ciudades" value="Ciudad:" />
+                    <p:selectOneMenu id="Ciudades" value="#{aeropuertoBean.oCiudad.ciudadID}" lazy="true" style="width:300px">
+                        <f:selectItem itemLabel="Selecciona uno" itemValue="" />
+                        <f:selectItems value="#{aeropuertoBean.oCiudades}" var="Ciudades"
+                        itemLabel="#{Ciudades.nombreciudad}" itemValue="#{Ciudades.ciudadID}" />
+                    </p:selectOneMenu> <br></br>
+
+                    <p:commandButton value="Agregar" action="#{aeropuertoBean.registrarAeropuerto}" onclick="PF('dlgNuevoAeropuerto').hide();" icon="ui-icon-disk"></p:commandButton>                                            
+                    </h:panelGrid>
+            </p:dialog>
+            
+        </h:form>       
+    </body>
+</html>

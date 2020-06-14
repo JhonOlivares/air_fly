@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    >
+
+    <h:head>
+        <title>Aeropuerto</title>
+        <h:outputStylesheet name="css/boot.css"/>
+        <h:outputStylesheet name="css/style2.css"/>
+    </h:head>
+
+    <body>
+        <!--.....................   MENUBAR.................................-->
+        <h:panelGroup layout="block">
+        <p:growl id="messages"/>
+        
+        <p:menubar style="margin-left:5%;margin-right:5%;margin-top:15px">
+            <p:menuitem value="Home" url="home.xhtml" icon="ui-icon-home"/>    
+            <p:menuitem value="Aeropuerto" url="Aeropuerto.xhtml" icon="ui-icon-airplane" />
+            <p:menuitem value="Avion" url="avion.xhtml" icon="ui-icon-airplane" />
+            <p:menuitem value="Vuelos" url="VueloProgramado.xhtml" icon="ui-icon-airplane" />  
+            <f:facet name="options">
+                <!--<p:inputText style="margin-right:10px" placeholder="Search"/>-->
+                <p:commandButton value="Logout" action="#{loginBean.logout}" icon="ui-icon-extlink" />
+            </f:facet>
+        </p:menubar>
+    </h:panelGroup>
+        <!--..................... FIN  MENUBAR.................................-->
+
+        <h4>esta página aun no está disponible</h4>
+
+    </body>
+</html>

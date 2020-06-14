@@ -1,0 +1,179 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+    >
+
+    <h:head>
+        <title>Avion</title>
+        <h:outputStylesheet name="css/boot.css"/>
+        <h:outputStylesheet name="css/style2.css"/>
+    </h:head>
+
+    <body>
+        <!--.....................   MENUBAR.................................-->
+        <h:panelGroup layout="block">
+            <p:growl id="messages2"/>
+            <p:menubar style="margin-left:5%;margin-right:5%;margin-top:15px">
+                <p:menuitem value="Home" url="home.xhtml" icon="ui-icon-home"/>    
+                <p:menuitem value="Aeropuerto" url="Aeropuerto.xhtml" icon="ui-icon-airplane" />
+                <p:menuitem value="Avion" url="avion.xhtml" icon="ui-icon-airplane" />
+                <p:menuitem value="Vuelos" url="VueloProgramado.xhtml" icon="ui-icon-airplane" />  
+                <f:facet name="options">
+                    <!--<p:inputText style="margin-right:10px" placeholder="Search"/>-->
+                    <p:commandButton value="Logout" action="#{loginBean.logout}" icon="ui-icon-extlink" />
+                </f:facet>
+            </p:menubar>
+        </h:panelGroup>
+        <!--..................... FIN  MENUBAR.................................-->
+
+        
+
+        
+        
+
+        
+        <div class="container" style="margin-top: 15px">
+            <!--
+                <div class="row">
+                  <div class="col-xs-12 text-center bg-primary" style="height:40px;">Top </div>
+                </div>
+            -->
+            <div class="row">
+                <div class="col-xs-3 bg-warning" style="height:600px; width: 300px;background: rgb(224, 224, 224);padding: 0">
+                            <h:form id="formDetail">
+                                <p:panelGrid style ="text-align: center;" columns="1" width="100%" styleClass="ui-panelgrid-blank ui-panelgrid-cell ui-panelgrid">
+                                    <p:outputPanel style="width: 300px; height: 209px;">
+                                        <h:graphicImage value="resources/images/#{avionBean.aircraftModelImage}.png" width="100%" style="margin-bottom: 12px"/>
+                                    </p:outputPanel>
+                                    <h:outputText value="#{avionBean.selectedAircraft.modeloavion.manufacturer.fabricante} #{avionBean.selectedAircraft.modeloavion.modelo}" rendered="#{avionBean.showAircraftDetail}" style="font-size: 30px;"/>
+                                    <h:outputText value="– #{avionBean.selectedAircraft.avionMatricula} –" rendered="#{avionBean.showAircraftDetail}" style="font-size: 22px;"/>
+                                </p:panelGrid>
+                                <h:panelGrid id="fichaTecnicaModeloAvion" columns="2" cellpadding="5" rendered="#{avionBean.showAircraftDetail}" style="margin: 7px">
+                                    <h:outputText for="fabricante" value="Fabricante:" style="font-size: 18px"/>
+                                    <h:outputText id="fabricante" value="#{avionBean.selectedAircraft.modeloavion.manufacturer.fabricante}" style="font-size: 18px"/>
+                                    <h:outputText for="capacidad" value="Capacidad:" style="font-size: 18px"/>
+                                    <h:outputText id="capacidad" value="#{avionBean.selectedAircraft.modeloavion.capacidad} pasajeros" style="font-size: 18px"/>
+                                    <h:outputText for="longitud" value="Longitud:" style="font-size: 18px"/>
+                                    <h:outputText id="longitud" value="#{avionBean.selectedAircraft.modeloavion.longitud}m" style="font-size: 18px"/>
+                                    <h:outputText for="envergadura" value="Envergadura:" style="font-size: 18px"/>
+                                    <h:outputText id="envergadura" value="#{avionBean.selectedAircraft.modeloavion.envergadura}m" style="font-size: 18px"/>
+                                    <h:outputText for="altura" value="Altura:" style="font-size: 18px"/>
+                                    <h:outputText id="altura" value="#{avionBean.selectedAircraft.modeloavion.altura}m" style="font-size: 18px"/>
+                                    <h:outputText for="peso" value="Peso máx:" style="font-size: 18px"/>
+                                    <h:outputText id="peso" value="#{avionBean.selectedAircraft.modeloavion.pesoMax_Despegue} toneladas" style="font-size: 18px"/>
+                                </h:panelGrid>
+                            </h:form>
+                </div>
+                <div class="col-xs-6 bg-info" style="height:100%;width: calc(100% - 500px);">
+                    <h1>Flota de aviones</h1>
+                            <h:form id="formPrincipal" style="margin-left:5px;margin-right:5px;margin-top:15px">
+                                    <p:growl id="msgs" showDetail="true"/>
+                                    <p:dataTable id="tablaAvion" widgetVar="tablaAvion" 
+                                        var="lista" value="#{avionBean.oAviones}" reflow="true"
+                                        filteredValue="#{avionBean.filteredAircrafts}" emptyMessage="No hay registros"
+                                        selectionMode="single" selection="#{avionBean.selectedAircraft}" rowKey="#{lista.avionMatricula}">                                        
+                                        <f:facet name="header">
+                                            <p:outputPanel>                                            
+                                                <p:inputText id="globalFilter" update="formPrincipal" onkeyup="PF('tablaAvion').filter()" style="width:100%" placeholder="Filtrar"/>
+                                            </p:outputPanel>
+                                        </f:facet>
+                                        <p:ajax event="rowSelect" listener="#{avionBean.onRowSelect}" update="formDetail formAcciones" />
+                                        <p:ajax event="rowUnselect" listener="#{avionBean.onRowUnselect}" update="formDetail formAcciones" />
+
+                                        <p:column headerText="Matricula" filterBy="#{lista.avionMatricula}" filterStyle="display:none" style="text-align: center; width: 110px;">
+                                            <h:outputText value="#{lista.avionMatricula}"/>
+                                        </p:column>
+                                        <p:column headerText="Modelo" filterBy="#{lista.modeloavion.modelo}" filterStyle="display:none" style="width: 180px;">
+                                            <h:outputText value="#{lista.modeloavion.modelo}" style="float:none"/>
+                                        </p:column>
+                                        <p:column headerText="Fabricante" filterBy="#{lista.modeloavion.manufacturer.fabricante}" filterStyle="display:none" style="text-align: center; width: 130px;">
+                                            <h:outputText value="#{lista.modeloavion.manufacturer.fabricante}" style="float:none"/>
+                                        </p:column>
+                                        <p:column headerText="Serie" filterBy="#{lista.serie}" filterStyle="display:none" style="text-align: center;">
+                                            <h:outputText value="#{lista.serie}"/>
+                                        </p:column>
+                                        <p:column headerText="Estado" filterBy="#{lista.estadoAvion.estado}" filterStyle="display:none" style="text-align: center; width: 140px;">
+                                            <h:outputText value="#{lista.estadoAvion.estado}" style="float:none"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </h:form>
+                </div>
+                <div class="col-xs-3 bg-danger" style="height:100%; width: 200px; padding: 0px">
+                    <h:form id="formAcciones">
+                        <p:panel header="Acciones" toggleable="true" toggleSpeed="500" style="margin-top: 76px">
+                            <h:panelGrid style ="text-align: center;" columns="1" width="100%">
+                                <p:commandButton value="Nuevo" actionListener="#{avionBean.resetValues}" update="agregarForm" ajax="true" oncomplete="PF('dlgNuevoAvion').show();" icon="ui-icon-plus" style="width: 100%; margin-top: 4px;"/>
+                                <p:commandButton value="Actualizar" actionListener="#{avionBean.listaAviones}" update="formPrincipal formDetail formAcciones" ajax="true" oncomplete="PF('tablaAvion').filter()" icon="ui-icon-refresh" style="width: 100%; margin-top: 4px;"/>
+                                <p:separator/>
+                                <p:commandButton value="Editar" update="actualizarForm" ajax="true" oncomplete="PF('dlgActualizarAvion').show();" title="Editar registro" disabled="#{!avionBean.showAircraftDetail}" icon="ui-icon-pencil" style="width: 100%; margin-top: 4px;"/>
+                                <p:commandButton value="Eliminar" update="formPrincipal formDetail formAcciones" ajax="true" actionListener="#{avionBean.eliminarAvion}" oncomplete="PF('tablaAvion').filter();" title="Eliminar registro" disabled="#{!avionBean.showAircraftDetail}" icon="ui-icon-trash" style="width: 100%; margin-top: 4px;">
+                                    <p:confirm header="Confirmation" message="Are you sure?" icon="ui-icon-alert" />
+                                </p:commandButton>
+                            </h:panelGrid>
+                        </p:panel>
+                        <p:confirmDialog global="true">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:form>
+                    <h:form id="agregarForm">
+                        <p:dialog header="Nuevo Avion" widgetVar="dlgNuevoAvion" resizable="false" modal="true">
+                            <h:panelGrid id="grid" columns="2" cellpadding="5">
+                                <p:outputLabel for="matriculaAvion" value="Matricula:" />
+                                <p:inputText id="matriculaAvion" value="#{avionBean.oAvion.avionMatricula}" label="Codigo IATA"/>
+
+                                <p:outputLabel for="modelor" value="Modelo:"/>
+                                <p:selectOneMenu id="modelor" value="#{avionBean.oModeloAvion.modeloAvionID}" lazy="true">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{avionBean.oModelos}" var="modelos" itemLabel="#{modelos.modelo}" itemValue="#{modelos.modeloAvionID}"/>
+                                </p:selectOneMenu>
+
+                                <p:outputLabel for="serie" value="Serie:" />
+                                <p:inputText id="serie" value="#{avionBean.oAvion.serie}" style="width: 400px"/>
+                                
+                                <p:outputLabel for="estadoAvionr" value="Estado:" />
+                                <p:selectOneMenu id="estadoAvionr" value="#{avionBean.oEstadoAvion.estadoID}" lazy="true">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{avionBean.estadosDeAvion}" var="estados" itemLabel="#{estados.estado}" itemValue="#{estados.estadoID}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:commandButton value="Agregar" actionListener="#{avionBean.registrarAvion}"
+                                update="formPrincipal" ajax="true"
+                                oncomplete="PF('tablaAvion').addRow();PF('dlgNuevoAvion').hide();PF('tablaAvion').filter();" styleClass="ui-priority-primary"/>
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                    <h:form id="actualizarForm">
+                        <p:dialog header="Editar Avion: #{avionBean.selectedAircraft.avionMatricula}" widgetVar="dlgActualizarAvion" resizable="false" modal="true">
+                            <h:panelGrid id="grid" columns="2" cellpadding="5">
+                                <p:outputLabel for="modelor" value="Modelo:"/>
+                                <p:selectOneMenu id="modelor" value="#{avionBean.oModeloAvion.modeloAvionID}" lazy="true">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{avionBean.oModelos}" var="modelos" itemLabel="#{modelos.modelo}" itemValue="#{modelos.modeloAvionID}"/>
+                                </p:selectOneMenu>
+                                
+                                <p:outputLabel for="serie" value="Serie:" />
+                                <p:inputText id="serie" value="#{avionBean.selectedAircraft.serie}" style="width: 400px"/>
+                                
+                                <p:outputLabel for="estadoAvionr" value="Estado:" />
+                                <p:selectOneMenu id="estadoAvionr" value="#{avionBean.oEstadoAvion.estadoID}" lazy="true">
+                                    <f:selectItem itemLabel="Selecciona uno" itemValue=""/>
+                                    <f:selectItems value="#{avionBean.estadosDeAvion}" var="estados" itemLabel="#{estados.estado}" itemValue="#{estados.estadoID}"/>
+                                </p:selectOneMenu>
+
+                                <p:commandButton value="Confirmar cambios" action="#{avionBean.editarAvion}"
+                                    oncomplete="PF('dlgActualizarAvion').hide();PF('tablaAvion').filter();" update="formPrincipal formDetail actualizarForm" ajax="true" styleClass="ui-priority-primary" icon="ui-icon-check"/>
+                            </h:panelGrid>
+                        </p:dialog>
+                    </h:form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

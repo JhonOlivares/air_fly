@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="AerolineaPeru">
+	<provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+	<class>model.Aeropuerto</class>
+	<class>model.Asiento</class>
+	<class>model.AsientoModeloAvion</class>
+	<class>model.AsientoModeloAvionPK</class>
+	<class>model.Avion</class>
+	<class>model.Cabina</class>
+	<class>model.Ciudad</class>
+	<class>model.Cliente</class>
+	<class>model.Empleado</class>
+	<class>model.EstadoAvion</class>
+	<class>model.EstadoReserva</class>
+	<class>model.EstadoVuelo</class>
+	<class>model.Manufacturer</class>
+	<class>model.ModeloAvion</class>
+	<class>model.Pais</class>
+	<class>model.Persona</class>
+	<class>model.PrecioVueloClase</class>
+	<class>model.PrecioVueloClasePK</class>
+	<class>model.RecurrenciaVueloProg</class>
+	<class>model.RecurrenciaVueloProgPK</class>
+	<class>model.Reserva</class>
+	<class>model.TarjetaEmbarque</class>
+	<class>model.TipoEmpleado</class>
+	<class>model.TipoRecurrenciaVueloProg</class>
+	<class>model.Vuelo</class>
+	<class>model.VueloProgramado</class>
+	<properties>
+	<property name="javax.persistence.jdbc.driver" value="oracle.jdbc.OracleDriver"/>
+	<property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+	<property name="javax.persistence.jdbc.user" value="system"/>
+	<property name="javax.persistence.jdbc.password" value="oracle"/>
+	</properties>
+	</persistence-unit>
+</persistence>
